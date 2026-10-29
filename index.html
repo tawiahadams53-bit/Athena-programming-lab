@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#212121">
+<title>ATHENA | AI Assistant</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#212121;color:#ececec;
+font:15px/1.6 system-ui,-apple-system,sans-serif}
+button,textarea{font:inherit}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#171717;padding:18px 12px;
+display:flex;flex-direction:column;flex-shrink:0}
+.brand{font-size:22px;font-weight:750;padding:8px 10px 25px}
+.nav{border:0;background:transparent;color:#eee;text-align:left;
+padding:12px;border-radius:9px;margin-bottom:5px;cursor:pointer}
+.nav:hover,.nav.active{background:#303030}
+.side-note{margin-top:auto;color:#999;font-size:12px;padding:12px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+header{height:60px;border-bottom:1px solid #333;padding:16px 22px;
+display:flex;justify-content:space-between;align-items:center}
+header small{color:#aaa}
+.mobile-brand{display:none}
+.view{display:none;flex:1;padding:20px}
+.view.active{display:block}
+.chat{width:min(760px,100%);margin:0 auto;display:flex;
+flex-direction:column;min-height:calc(100vh - 100px)}
+.welcome{text-align:center;margin:auto 0 35px;padding-top:55px}
+.welcome h1{font-size:clamp(27px,5vw,35px);font-weight:600}
+.muted{color:#aaa}
+.suggestions{display:grid;grid-template-columns:1fr 1fr;gap:10px;
+margin:25px 0}
+.suggestion{border:1px solid #444;background:transparent;color:#eee;
+padding:14px;border-radius:13px;text-align:left;cursor:pointer}
+.suggestion:hover{background:#2b2b2b}
+.suggestion b,.suggestion span{display:block}
+.suggestion span{font-size:12px;color:#aaa;margin-top:4px}
+.messages{flex:1;padding:20px 0;display:flex;flex-direction:column;gap:22px}
+.message{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8}
+.message.user{align-self:flex-end;background:#303030;border-radius:20px;
+padding:10px 16px;max-width:85%}
+.message.bot{width:100%;padding:5px 0}
+.composer{display:flex;align-items:flex-end;gap:10px;
+background:#303030;border:1px solid #505050;border-radius:28px;
+padding:10px 12px;box-shadow:0 5px 25px #0002}
+.composer textarea{flex:1;min-width:0;resize:none;max-height:150px;
+background:transparent;color:white;border:0;outline:0;padding:7px}
+.composer textarea::placeholder{color:#aaa}
+.send{width:40px;height:40px;border:0;border-radius:50%;
+background:#3b82f6;color:white;font-size:25px;font-weight:700;
+display:grid;place-items:center;cursor:pointer;transition:.2s}
+.send:hover{background:#2563eb;transform:scale(1.05)}
+.send:active{transform:scale(.94)}
+.disclaimer{text-align:center;color:#888;font-size:11px;margin:10px 0 18px}
+.content{width:min(760px,100%);margin:15px auto}
+.card{background:#292929;border:1px solid #414141;border-radius:14px;
+padding:18px;margin:14px 0}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#171717;
+padding:14px;border-radius:9px;color:#ddd}
+.terminal{background:#101010;border:1px solid #444;border-radius:12px;
+font-family:monospace;overflow:hidden}
+.terminal-title{padding:10px;background:#292929}
+#output{height:230px;overflow:auto;white-space:pre-wrap;
+overflow-wrap:anywhere;padding:14px;color:#ddd;font-size:13px}
+.terminal form{display:flex;gap:8px;padding:10px;border-top:1px solid #333}
+.terminal input{flex:1;min-width:0;background:transparent;color:white;
+border:0;outline:0;font-family:monospace}
+.terminal button{background:#eee;color:#111;border:0;border-radius:7px;padding:8px}
+footer{text-align:center;border-top:1px solid #333;color:#999;
+font-size:12px;padding:25px 12px}
+@media(max-width:650px){
+.sidebar{display:none}.mobile-brand{display:inline}
+header{padding:14px}.view{padding:15px}
+.suggestions{grid-template-columns:1fr}
+.chat{min-height:calc(100vh - 100px)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">◉ ATHENA</div>
+<button class="nav active" data-view="chat">＋ New chat</button>
+<button class="nav" data-view="learn">⌘ Learn coding</button>
+<button class="nav" data-view="terminal">›_ Practice terminal</button>
+<button class="nav" data-view="about">ⓘ My journey</button>
+<div class="side-note">Built by Adams Kwaku Tawiah.<br>Learning today. Building tomorrow.</div>
+</aside>
+<div class="main">
+<header><strong><span class="mobile-brand">◉ ATHENA · </span><span id="heading">AI Assistant</span></strong><small>Programming companion</small></header>
+<section class="view active" id="chat">
+<div class="chat">
+<div class="welcome" id="welcome">
+<h1>What are we building today?</h1>
+<p class="muted">Learn a skill. Solve a problem. Make something real.</p>
+<div class="suggestions">
+<button class="suggestion" data-prompt="Teach me Python from the beginning."><b>⌘ Learn Python</b><span>Start with the fundamentals</span></button>
+<button class="suggestion" data-prompt="Help me build a website with HTML, CSS and JavaScript."><b>⌘ Build a website</b><span>Turn an idea into a webpage</span></button>
+<button class="suggestion" data-prompt="Explain basic Termux commands."><b>›_ Explore Termux</b><span>Understand your command line</span></button>
+<button class="suggestion" data-prompt="Teach me defensive cybersecurity basics."><b>◇ Cybersecurity</b><span>Learn to protect systems</span></button>
+</div>
+</div>
+<div class="messages" id="messages"></div>
+<form class="composer" id="chatform">
+<textarea id="question" rows="1" placeholder="Message ATHENA..." required></textarea>
+<button class="send" type="submit" aria-label="Send">↑</button>
+</form>
+<div class="disclaimer">ATHENA can make mistakes. Verify important information.</div>
+</div>
+</section>
+<section class="view" id="learn"><div class="content">
+<h1>Learn by building.</h1><p class="muted">Small lessons. Practical examples.</p>
+<div class="card"><h2>Python basics</h2><p>Variables store values.</p><pre>name = "Adams"
+print("Hello", name)</pre></div>
+<div class="card"><h2>Web development</h2><p>HTML structures a page, CSS styles it, and JavaScript adds interaction.</p></div>
+<div class="card"><h2>Defensive cybersecurity</h2><p>Start with Linux, networking, account security and protecting your own systems.</p></div>
+</div></section>
+<section class="view" id="terminal"><div class="content">
+<h1>Practice terminal</h1><p class="muted">A learning simulator, not your real phone shell.</p>
+<div class="terminal"><div class="terminal-title">ATHENA · PRACTICE SHELL</div>
+<div id="output">Welcome, Adams.\nType help to see available commands.\n$</div>
+<form id="termform"><span>$</span><input id="cmd" placeholder="Type a command..." autocomplete="off"><button>Run</button></form>
+</div></div></section>
+<section class="view" id="about"><div class="content">
+<h1>The person behind ATHENA.</h1>
+<div class="card">
+<p>Hello, I'm <b>Adams Kwaku Tawiah</b>.</p>
+<p>I'm a young programmer with a dream bigger than my current experience. I'm still learning, making mistakes, and discovering what technology makes possible.</p>
+<p>My journey began with curiosity, a phone, and a determination to become a professional developer one day.</p>
+<p>ATHENA is more than a project to me. It represents the courage to start before knowing everything, and the hope that small beginnings can lead to meaningful things.</p>
+<p>I may not have all the answers today, but I'm willing to learn, build, improve and keep moving forward.</p>
+<p><b>If you believe in helping young people turn their dreams into skills, please support my journey.</b></p>
+<p>This is not the end of my story. It's only the beginning.</p>
+</div></div></section>
+<footer>ATHENA · An independent learning project by Adams Kwaku Tawiah.</footer>
+</div></div>
+<script>
+const views=document.querySelectorAll(".view");
+const navs=document.querySelectorAll(".nav");
+const heading=document.getElementById("heading");
+const titles={chat:"AI Assistant",learn:"Learn coding",terminal:"Practice terminal",about:"My journey"};
+function openView(id){
+views.forEach(v=>v.classList.toggle("active",v.id===id));
+navs.forEach(n=>n.classList.toggle("active",n.dataset.view===id));
+heading.textContent=titles[id];
+}
+navs.forEach(n=>n.onclick=()=>openView(n.dataset.view));
+const messages=document.getElementById("messages");
+const welcome=document.getElementById("welcome");
+const question=document.getElementById("question");
+function addMessage(text,role){
+const el=document.createElement("div");
+el.className="message "+role;
+el.textContent=text;
+messages.appendChild(el);
+}
+const chatHistory = [];
+const sendButton = document.querySelector(".send");
+
+async function send(text) {
+    text = (text || question.value).trim();
+    if (!text || sendButton.disabled) return;
+
+    openView("chat");
+    welcome.style.display = "none";
+    addMessage(text, "user");
+    question.value = "";
+    question.style.height = "auto";
+
+    chatHistory.push({role: "user", content: text});
+
+    const waiting = document.createElement("div");
+    waiting.className = "message bot";
+    waiting.textContent = "ATHENA is thinking...";
+    messages.appendChild(waiting);
+    messages.scrollTop = messages.scrollHeight;
+    sendButton.disabled = true;
+
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({messages: chatHistory.slice(-20)})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "The AI request failed.");
+        }
+        if (typeof data.reply !== "string" || !data.reply.trim()) {
+            throw new Error("ATHENA returned an empty reply.");
+        }
+
+        waiting.textContent = data.reply;
+        chatHistory.push({role: "assistant", content: data.reply});
+    } catch (error) {
+        waiting.textContent = "Connection error: " + error.message;
+        console.error("ATHENA chat error:", error);
+        chatHistory.pop();
+    } finally {
+        sendButton.disabled = false;
+        question.focus();
+        messages.scrollTop = messages.scrollHeight;
+    }
+}
+
+document.getElementById("chatform").onsubmit=e=>{e.preventDefault();send()};
+document.querySelectorAll("[data-prompt]").forEach(b=>b.onclick=()=>send(b.dataset.prompt));
+question.oninput=()=>{question.style.height="auto";question.style.height=Math.min(question.scrollHeight,150)+"px"};
+const output=document.getElementById("output");
+const commands={help:"Commands: help, pwd, ls, whoami, python, clear, echo hello",pwd:"/home/adams/practice",ls:"hello.py  index.html  projects/",whoami:"adams",python:'Example:\nname = "Adams"\nprint("Hello", name)\n\nOutput:\nHello, Adams',"python --version":"Python 3 (simulated)","echo hello":"hello"};
+document.getElementById("termform").onsubmit=e=>{
+e.preventDefault();const c=document.getElementById("cmd").value.trim();if(!c)return;
+if(c==="clear")output.textContent="$";
+else output.textContent+="\n$ "+c+"\n"+(commands[c]||"Command unavailable in this simulator. Type help.");
+output.scrollTop=output.scrollHeight;document.getElementById("cmd").value="";
+};
+</script>
+</body>
+</html>
