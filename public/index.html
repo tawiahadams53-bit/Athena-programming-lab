@@ -116,6 +116,712 @@ font:inherit
 .header-actions small{display:none}
 .header-contact{padding:7px 10px}
 }
+
+/* ATHENA Voice Mode */
+.voice-launch {
+    width:42px;height:42px;border:1px solid #555;
+    border-radius:50%;background:#292929;color:white;
+    cursor:pointer;font-size:19px;flex-shrink:0;
+}
+.voice-launch:hover {background:#414141}
+.voice-overlay {
+    position:fixed;inset:0;z-index:9999;
+    background:radial-gradient(circle at 50% 38%,#302052,#171717 65%);
+    display:none;flex-direction:column;align-items:center;
+    justify-content:space-between;padding:35px 20px;
+    color:white;text-align:center;
+}
+.voice-overlay.active {display:flex}
+.voice-top {width:100%;display:flex;justify-content:space-between;align-items:center}
+.voice-orb {
+    width:190px;height:190px;border-radius:50%;
+    display:grid;place-items:center;
+    background:linear-gradient(145deg,#7650d8,#34205e);
+    box-shadow:0 0 55px #8055d966;
+    font-size:65px;transition:transform .3s;
+}
+.voice-orb.listening {animation:voicePulse 1.5s infinite}
+@keyframes voicePulse {
+    0%,100% {transform:scale(1);box-shadow:0 0 35px #8055d966}
+    50% {transform:scale(1.08);box-shadow:0 0 75px #a47affaa}
+}
+.voice-status {color:#c7b8e8;margin-top:25px}
+.voice-controls {display:flex;align-items:center;justify-content:center;gap:24px}
+.voice-control {
+    width:58px;height:58px;border:0;border-radius:50%;
+    background:#383344;color:white;font-size:23px;cursor:pointer;
+}
+.voice-control.end {background:#b83242}
+.voice-control:disabled {opacity:.45}
+.voice-caption {max-width:500px;min-height:48px;color:#ddd}
+.voice-close {
+    border:1px solid #555;background:transparent;color:white;
+    border-radius:20px;padding:9px 15px;cursor:pointer;
+}
+@media(max-width:500px) {
+    .voice-orb {width:155px;height:155px;font-size:55px}
+}
+
+
+/* ATHENA CHATGPT DARK REDESIGN */
+
+:root {
+    color-scheme: dark;
+    --bg: #212121;
+    --panel: #171717;
+    --surface: #2f2f2f;
+    --border: #3a3a3a;
+    --text: #ececec;
+    --muted: #a1a1aa;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.app {
+    min-height: 100dvh;
+    background: var(--bg);
+}
+
+.sidebar {
+    width: 260px;
+    min-height: 100dvh;
+    background: var(--panel);
+    border-right: 1px solid #292929;
+    padding: 18px 12px;
+}
+
+.brand {
+    font-size: 21px;
+    letter-spacing: -.6px;
+    padding: 10px 12px 28px;
+}
+
+.nav {
+    width: 100%;
+    padding: 11px 13px;
+    border-radius: 9px;
+    color: #d4d4d4;
+    transition: background .18s;
+}
+
+.nav:hover {
+    background: #292929;
+}
+
+.nav.active {
+    background: #303030;
+    color: white;
+}
+
+.side-note {
+    line-height: 1.8;
+    color: #858585;
+}
+
+.main {
+    min-height: 100dvh;
+    background: var(--bg);
+}
+
+header {
+    height: 62px;
+    padding: 0 25px;
+    background: rgba(33,33,33,.96);
+    border-bottom: 1px solid #303030;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header strong {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+header small {
+    color: var(--muted);
+}
+
+.header-contact {
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 20px;
+    padding: 7px 14px;
+}
+
+.header-contact:hover {
+    background: #303030;
+}
+
+.view {
+    padding: 24px;
+}
+
+.view#chat {
+    padding: 0 24px;
+    min-height: calc(100dvh - 62px);
+}
+
+.chat {
+    width: min(820px, 100%);
+    min-height: calc(100dvh - 62px);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome {
+    margin: auto 0 30px;
+    padding: 50px 0 10px;
+}
+
+.welcome h1 {
+    font-size: clamp(27px, 5vw, 34px);
+    font-weight: 600;
+    letter-spacing: -1px;
+}
+
+.welcome .muted {
+    color: #a3a3a3;
+}
+
+.suggestions {
+    gap: 10px;
+    margin: 30px 0 18px;
+}
+
+.suggestion {
+    min-height: 78px;
+    background: transparent;
+    border: 1px solid #414141;
+    border-radius: 15px;
+    padding: 15px;
+    transition: background .2s, border-color .2s;
+}
+
+.suggestion:hover {
+    background: #2a2a2a;
+    border-color: #666;
+}
+
+.suggestion b {
+    font-weight: 600;
+}
+
+.suggestion span {
+    color: #999;
+}
+
+.messages {
+    flex: 1;
+    padding: 28px 0;
+    gap: 30px;
+}
+
+.message {
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.message.user {
+    align-self: flex-end;
+    max-width: 82%;
+    padding: 11px 17px;
+    background: #303030;
+    border: 1px solid #383838;
+    border-radius: 20px;
+}
+
+.message.bot {
+    width: 100%;
+    padding: 4px 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+.composer {
+    width: 100%;
+    gap: 9px;
+    padding: 10px 12px;
+    background: #303030;
+    border: 1px solid #505050;
+    border-radius: 27px;
+    box-shadow: 0 8px 30px #0003;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.composer:focus-within {
+    border-color: #777;
+    box-shadow: 0 8px 32px #0004;
+}
+
+.composer textarea {
+    min-height: 40px;
+    max-height: 150px;
+    padding: 9px 7px;
+    color: white;
+    font-size: 15px;
+}
+
+.composer textarea::placeholder {
+    color: #a1a1a1;
+}
+
+.send {
+    width: 39px;
+    height: 39px;
+    background: #f4f4f4;
+    color: #171717;
+    font-size: 24px;
+}
+
+.send:hover {
+    background: white;
+}
+
+.send:disabled {
+    opacity: .45;
+}
+
+.voice-launch {
+    width: 39px;
+    height: 39px;
+    background: transparent;
+    border-color: #555;
+}
+
+.disclaimer {
+    color: #888;
+    font-size: 11px;
+    margin: 12px 0 17px;
+}
+
+.content {
+    width: min(800px, 100%);
+}
+
+.content h1 {
+    font-weight: 600;
+    letter-spacing: -.6px;
+}
+
+.card, .lesson {
+    background: #292929;
+    border: 1px solid #3b3b3b;
+    border-radius: 15px;
+}
+
+.lesson {
+    padding: 17px;
+}
+
+.lesson summary {
+    color: #eee;
+}
+
+pre {
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 11px;
+    line-height: 1.7;
+}
+
+.terminal {
+    background: #111;
+    border-color: #3b3b3b;
+    border-radius: 14px;
+}
+
+.terminal-title {
+    background: #252525;
+}
+
+footer {
+    border-color: #333;
+}
+
+/* Keep the voice interface visually distinct. */
+.voice-overlay {
+    background: radial-gradient(circle at 50% 38%, #302052, #171717 65%);
+}
+
+/* Mobile navigation and layout */
+@media(max-width:650px) {
+    .app {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        min-height: auto;
+        height: 58px;
+        padding: 5px 9px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: 0;
+        border-bottom: 1px solid #303030;
+        gap: 5px;
+    }
+
+    .brand {
+        flex: 0 0 auto;
+        font-size: 17px;
+        padding: 8px 10px;
+    }
+
+    .nav {
+        flex: 0 0 auto;
+        width: auto;
+        white-space: nowrap;
+        padding: 8px 11px;
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .side-note {
+        display: none;
+    }
+
+    .main {
+        min-height: calc(100dvh - 58px);
+    }
+
+    header {
+        height: 56px;
+        padding: 0 14px;
+    }
+
+    .view {
+        padding: 15px;
+    }
+
+    .view#chat {
+        padding: 0 13px;
+        min-height: calc(100dvh - 114px);
+    }
+
+    .chat {
+        min-height: calc(100dvh - 114px);
+    }
+
+    .welcome {
+        padding-top: 35px;
+    }
+
+    .welcome h1 {
+        font-size: 27px;
+    }
+
+    .messages {
+        padding: 20px 0;
+        gap: 23px;
+    }
+
+    .message.user {
+        max-width: 90%;
+    }
+
+    .suggestions {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .suggestion {
+        padding: 12px;
+        min-height: 75px;
+    }
+
+    .header-contact {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+@media(max-width:380px) {
+    .suggestions {
+        grid-template-columns: 1fr;
+    }
+
+    .nav {
+        font-size: 11px;
+        padding: 7px 9px;
+    }
+}
+
+
+/* ATHENA DEEP BLACK THEME */
+
+:root {
+    color-scheme: dark;
+    --bg: #050505;
+    --panel: #000000;
+    --surface: #111111;
+    --border: #242424;
+    --text: #f5f5f5;
+    --muted: #929292;
+}
+
+html, body, .app, .main, .view, .view#chat {
+    background: #050505 !important;
+    color: #f5f5f5;
+}
+
+.sidebar {
+    background: #000000;
+    border-right: 1px solid #1c1c1c;
+}
+
+.brand {
+    color: #ffffff;
+}
+
+.nav {
+    color: #bdbdbd;
+}
+
+.nav:hover, .nav.active {
+    background: #171717;
+    color: white;
+}
+
+header {
+    background: #050505;
+    border-bottom: 1px solid #1c1c1c;
+}
+
+header small, .muted {
+    color: #929292;
+}
+
+.suggestion {
+    background: #080808;
+    border-color: #252525;
+    color: #eeeeee;
+}
+
+.suggestion:hover {
+    background: #151515;
+    border-color: #444444;
+}
+
+.message.user {
+    background: #191919;
+    border-color: #292929;
+    color: #ffffff;
+}
+
+.message.bot {
+    background: transparent;
+    color: #eeeeee;
+}
+
+.composer {
+    background: #111111;
+    border: 1px solid #303030;
+    box-shadow: 0 8px 35px #000000aa;
+}
+
+.composer:focus-within {
+    background: #141414;
+    border-color: #555555;
+}
+
+.composer textarea {
+    color: white;
+}
+
+.composer textarea::placeholder {
+    color: #777777;
+}
+
+.send {
+    background: #f2f2f2;
+    color: #050505;
+}
+
+.send:hover {
+    background: #ffffff;
+}
+
+.voice-launch {
+    background: #171717;
+    border-color: #383838;
+}
+
+.card, .lesson, .update {
+    background: #0b0b0b;
+    border-color: #252525;
+}
+
+.lesson p {
+    color: #bcbcbc;
+}
+
+pre {
+    background: #000000;
+    border: 1px solid #242424;
+    color: #dddddd;
+}
+
+.terminal {
+    background: #000000;
+    border-color: #292929;
+}
+
+.terminal-title {
+    background: #111111;
+}
+
+#output {
+    color: #eeeeee;
+}
+
+.terminal form {
+    border-color: #252525;
+}
+
+.terminal button {
+    background: #eeeeee;
+    color: #000000;
+}
+
+.header-contact {
+    background: #101010;
+    border-color: #333333;
+}
+
+.header-contact:hover {
+    background: #1d1d1d;
+}
+
+footer {
+    background: #000000;
+    border-color: #222222;
+}
+
+.disclaimer, .side-note {
+    color: #777777;
+}
+
+/* Voice mode retains its purple identity */
+.voice-overlay {
+    background: radial-gradient(circle at 50% 38%, #24143d, #050505 70%);
+}
+
+
+/* ATHENA DEEP BLUE SEND BUTTON */
+
+.send {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: 0 !important;
+    box-shadow: 0 2px 12px #2563eb33;
+}
+
+.send:hover {
+    background: #1d4ed8 !important;
+    transform: scale(1.05);
+}
+
+.send:active {
+    background: #1e40af !important;
+    transform: scale(.94);
+}
+
+.send:disabled {
+    background: #1e3a8a !important;
+    opacity: .55;
+}
+
+
+/* ATHENA image attachment */
+.composer {
+    display: flex;
+    align-items: flex-end;
+}
+
+.composer textarea {
+    flex: 1;
+    min-width: 0;
+    resize: none;
+}
+
+.attach {
+    flex: 0 0 39px;
+    width: 39px;
+    height: 39px;
+    background: transparent;
+    color: #eee;
+    border: 1px solid #555;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.attach:hover {
+    background: #444;
+}
+
+.attach:disabled {
+    opacity: .45;
+}
+
+.attachment-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 9px;
+    background: #292929;
+    border: 1px solid #444;
+    border-radius: 13px;
+}
+
+.attachment-preview[hidden] {
+    display: none;
+}
+
+.attachment-preview img {
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.attachment-name {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #ccc;
+    font-size: 12px;
+}
+
+.remove-image {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    color: #bbb;
+    border: 0;
+    font-size: 23px;
+    cursor: pointer;
+}
+
 </style>
 </head>
 <body>
@@ -155,8 +861,16 @@ font:inherit
 </div>
 </div>
 <div class="messages" id="messages"></div>
+<div class="attachment-preview" id="attachmentPreview" hidden>
+<img id="attachmentThumbnail" alt="Selected image preview">
+<span class="attachment-name" id="attachmentName"></span>
+<button class="remove-image" id="removeImage" type="button" aria-label="Remove image">×</button>
+</div>
 <form class="composer" id="chatform">
-<textarea id="question" rows="1" placeholder="Message ATHENA..." required></textarea>
+<input id="imageInput" type="file" accept="image/*" hidden>
+<button class="attach" id="attachButton" type="button" aria-label="Attach image" title="Attach image">📎</button>
+<textarea id="question" rows="1" placeholder="Message ATHENA..."></textarea>
+<button class="voice-launch" id="voiceLaunch" type="button" aria-label="Start voice mode" title="Voice mode">🎙</button>
 <button class="send" type="submit" aria-label="Send">↑</button>
 </form>
 <div class="disclaimer">ATHENA can make mistakes. Verify important information.</div>
@@ -283,16 +997,151 @@ el.className="message "+role;
 el.textContent=text;
 messages.appendChild(el);
 }
+
+const imageInput = document.getElementById("imageInput");
+const attachButton = document.getElementById("attachButton");
+const attachmentPreview = document.getElementById("attachmentPreview");
+const attachmentThumbnail = document.getElementById("attachmentThumbnail");
+const attachmentName = document.getElementById("attachmentName");
+const removeImageButton = document.getElementById("removeImage");
+
+let selectedImageData = null;
+let selectedImageUrl = null;
+
+attachButton.onclick = () => imageInput.click();
+
+function clearAttachment() {
+    selectedImageData = null;
+
+    if (selectedImageUrl) {
+        URL.revokeObjectURL(selectedImageUrl);
+        selectedImageUrl = null;
+    }
+
+    attachmentThumbnail.removeAttribute("src");
+    attachmentName.textContent = "";
+    attachmentPreview.hidden = true;
+    imageInput.value = "";
+}
+
+removeImageButton.onclick = clearAttachment;
+
+function blobToDataURL(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Could not prepare the image."));
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function compressImage(file) {
+    if (!file.type.startsWith("image/")) {
+        throw new Error("Please select an image.");
+    }
+
+    if (file.size > 12 * 1024 * 1024) {
+        throw new Error("That image is too large to process. Choose one under 12 MB.");
+    }
+
+    const image = new Image();
+    const previewUrl = URL.createObjectURL(file);
+
+    image.src = previewUrl;
+
+    try {
+        await new Promise((resolve, reject) => {
+            image.onload = resolve;
+            image.onerror = () => reject(new Error("Could not open this image."));
+        });
+
+        const maxSide = 1280;
+        const scale = Math.min(
+            1,
+            maxSide / Math.max(image.naturalWidth, image.naturalHeight)
+        );
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        let blob = null;
+
+        for (const quality of [0.82, 0.72, 0.62, 0.52]) {
+            blob = await new Promise(resolve =>
+                canvas.toBlob(resolve, "image/jpeg", quality)
+            );
+
+            if (blob && blob.size <= 1800 * 1024) break;
+        }
+
+        if (!blob || blob.size > 2 * 1024 * 1024) {
+            throw new Error("Could not compress this image enough. Try a smaller image.");
+        }
+
+        return {
+            data: await blobToDataURL(blob),
+            previewUrl
+        };
+    } catch (error) {
+        URL.revokeObjectURL(previewUrl);
+        throw error;
+    }
+}
+
+imageInput.onchange = async () => {
+    const file = imageInput.files[0];
+    if (!file) return;
+
+    attachButton.disabled = true;
+    attachmentName.textContent = "Preparing image...";
+
+    try {
+        const result = await compressImage(file);
+
+        if (selectedImageUrl) {
+            URL.revokeObjectURL(selectedImageUrl);
+        }
+
+        selectedImageData = result.data;
+        selectedImageUrl = result.previewUrl;
+
+        attachmentThumbnail.src = selectedImageUrl;
+        attachmentName.textContent = file.name + " · compressed";
+        attachmentPreview.hidden = false;
+    } catch (error) {
+        clearAttachment();
+        alert(error.message);
+    } finally {
+        attachButton.disabled = false;
+    }
+};
+
 const chatHistory = [];
 const sendButton = document.querySelector(".send");
 
 async function send(text) {
     text = (text || question.value).trim();
-    if (!text || sendButton.disabled) return;
+
+    const imageToSend = selectedImageData;
+
+    if ((!text && !imageToSend) || sendButton.disabled) return;
+
+    if (!text && imageToSend) {
+        text = "Please describe and analyze this image.";
+    }
 
     openView("chat");
     welcome.style.display = "none";
-    addMessage(text, "user");
+
+    addMessage(
+        imageToSend ? "📷 Image attached\n" + text : text,
+        "user"
+    );
+
     question.value = "";
     question.style.height = "auto";
 
@@ -303,13 +1152,23 @@ async function send(text) {
     waiting.textContent = "ATHENA is thinking...";
     messages.appendChild(waiting);
     messages.scrollTop = messages.scrollHeight;
+
     sendButton.disabled = true;
+    attachButton.disabled = true;
 
     try {
+        const requestBody = {
+            messages: chatHistory.slice(-20)
+        };
+
+        if (imageToSend) {
+            requestBody.image = imageToSend;
+        }
+
         const response = await fetch("/api/chat", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({messages: chatHistory.slice(-20)})
+            body: JSON.stringify(requestBody)
         });
 
         const data = await response.json();
@@ -317,18 +1176,26 @@ async function send(text) {
         if (!response.ok) {
             throw new Error(data.error || "The AI request failed.");
         }
+
         if (typeof data.reply !== "string" || !data.reply.trim()) {
             throw new Error("ATHENA returned an empty reply.");
         }
 
         waiting.textContent = data.reply;
         chatHistory.push({role: "assistant", content: data.reply});
+
+        if (imageToSend && selectedImageData === imageToSend) {
+            clearAttachment();
+        }
+
     } catch (error) {
         waiting.textContent = "Connection error: " + error.message;
         console.error("ATHENA chat error:", error);
         chatHistory.pop();
+
     } finally {
         sendButton.disabled = false;
+        attachButton.disabled = false;
         question.focus();
         messages.scrollTop = messages.scrollHeight;
     }
@@ -370,5 +1237,241 @@ output.scrollTop=output.scrollHeight;
 input.value="";
 };
 </script>
+
+<div class="voice-overlay" id="voiceOverlay" role="dialog" aria-modal="true" aria-label="ATHENA Voice Mode">
+    <div class="voice-top">
+        <strong>◉ ATHENA VOICE</strong>
+        <button class="voice-close" id="voiceClose" type="button">Back to chat</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px;margin:auto 0">
+        <div class="voice-orb" id="voiceOrb">◉</div>
+        <h2 style="margin:0">ATHENA</h2>
+        <div class="voice-status" id="voiceStatus">Starting voice mode...</div>
+        <div class="voice-caption" id="voiceCaption">Speak naturally. ATHENA will respond aloud.</div>
+    </div>
+
+    <div class="voice-controls">
+        <button class="voice-control" id="voiceMic" type="button" aria-label="Pause or resume microphone">🎙</button>
+        <button class="voice-control end" id="voiceEnd" type="button" aria-label="End voice conversation">✕</button>
+    </div>
+</div>
+
+<script>
+(() => {
+    const launch = document.getElementById("voiceLaunch");
+    const overlay = document.getElementById("voiceOverlay");
+    const close = document.getElementById("voiceClose");
+    const mic = document.getElementById("voiceMic");
+    const end = document.getElementById("voiceEnd");
+    const status = document.getElementById("voiceStatus");
+    const caption = document.getElementById("voiceCaption");
+    const orb = document.getElementById("voiceOrb");
+
+    const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    let recognition = null;
+    let voiceActive = false;
+    let listening = false;
+    let waitingForAI = false;
+    let speaking = false;
+    let manuallyPaused = false;
+
+    function showStatus(message) {
+        status.textContent = message;
+    }
+
+    function stopListening() {
+        if (recognition && listening) {
+            try { recognition.stop(); } catch (_) {}
+        }
+        listening = false;
+        orb.classList.remove("listening");
+    }
+
+    function startListening() {
+        if (!voiceActive || waitingForAI || speaking || manuallyPaused) return;
+
+        if (!recognition) {
+            showStatus("Speech recognition is unavailable in this browser.");
+            return;
+        }
+
+        try {
+            recognition.start();
+        } catch (_) {
+            showStatus("Preparing microphone...");
+        }
+    }
+
+    function speakReply(text) {
+        if (!voiceActive || !("speechSynthesis" in window)) {
+            startListening();
+            return;
+        }
+
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = 1;
+        utterance.pitch = 1;
+
+        speaking = true;
+        showStatus("ATHENA is speaking...");
+        caption.textContent = text;
+        orb.classList.remove("listening");
+
+        utterance.onend = () => {
+            speaking = false;
+            if (voiceActive && !manuallyPaused) {
+                showStatus("Listening...");
+                setTimeout(startListening, 350);
+            }
+        };
+
+        utterance.onerror = () => {
+            speaking = false;
+            if (voiceActive) startListening();
+        };
+
+        speechSynthesis.speak(utterance);
+    }
+
+    function setupRecognition() {
+        if (!SpeechRecognition) return;
+
+        recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.continuous = false;
+        recognition.interimResults = true;
+
+        recognition.onstart = () => {
+            listening = true;
+            showStatus("Listening...");
+            caption.textContent = "I'm listening. Speak now.";
+            orb.classList.add("listening");
+            mic.textContent = "⏸";
+        };
+
+        recognition.onresult = event => {
+            let finalText = "";
+            let interimText = "";
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const text = event.results[i][0].transcript;
+                if (event.results[i].isFinal) finalText += text;
+                else interimText += text;
+            }
+
+            caption.textContent = finalText || interimText || "Listening...";
+
+            if (finalText.trim()) {
+                const message = finalText.trim();
+                stopListening();
+                waitingForAI = true;
+                showStatus("ATHENA is thinking...");
+                caption.textContent = message;
+
+                const previousLength = chatHistory.length;
+
+                send(message).then(() => {
+                    waitingForAI = false;
+
+                    const latest = chatHistory[chatHistory.length - 1];
+                    if (
+                        chatHistory.length >= previousLength + 2 &&
+                        latest && latest.role === "assistant"
+                    ) {
+                        speakReply(latest.content);
+                    } else if (voiceActive && !manuallyPaused) {
+                        showStatus("Ready. Speak again.");
+                        startListening();
+                    }
+                });
+            }
+        };
+
+        recognition.onerror = event => {
+            listening = false;
+            orb.classList.remove("listening");
+
+            if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+                showStatus("Microphone permission denied. Allow it in your browser settings.");
+                manuallyPaused = true;
+            } else if (event.error !== "no-speech" && event.error !== "aborted") {
+                showStatus("Microphone error: " + event.error);
+            }
+        };
+
+        recognition.onend = () => {
+            listening = false;
+            orb.classList.remove("listening");
+            mic.textContent = "🎙";
+
+            if (voiceActive && !waitingForAI && !speaking && !manuallyPaused) {
+                setTimeout(startListening, 500);
+            }
+        };
+    }
+
+    function openVoice() {
+        if (!SpeechRecognition) {
+            alert("Voice recognition is not supported in this browser. Try an updated version of Chrome.");
+            return;
+        }
+
+        overlay.classList.add("active");
+        voiceActive = true;
+        manuallyPaused = false;
+        setupRecognition();
+        showStatus("Requesting microphone access...");
+        startListening();
+    }
+
+    function closeVoice() {
+        voiceActive = false;
+        manuallyPaused = true;
+        stopListening();
+
+        if (recognition) {
+            try { recognition.abort(); } catch (_) {}
+            recognition = null;
+        }
+
+        if ("speechSynthesis" in window) speechSynthesis.cancel();
+        speaking = false;
+        waitingForAI = false;
+        overlay.classList.remove("active");
+        showStatus("Voice mode ended.");
+    }
+
+    launch.addEventListener("click", openVoice);
+    close.addEventListener("click", closeVoice);
+    end.addEventListener("click", closeVoice);
+
+    mic.addEventListener("click", () => {
+        if (!voiceActive) return;
+
+        if (manuallyPaused) {
+            manuallyPaused = false;
+            showStatus("Resuming...");
+            startListening();
+        } else {
+            manuallyPaused = true;
+            stopListening();
+            if ("speechSynthesis" in window) speechSynthesis.cancel();
+            speaking = false;
+            showStatus("Microphone paused.");
+            mic.textContent = "🎙";
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && voiceActive) closeVoice();
+    });
+})();
+</script>
+
 </body>
 </html>
