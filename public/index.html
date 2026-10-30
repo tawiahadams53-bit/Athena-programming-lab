@@ -76,6 +76,46 @@ header{padding:14px}.view{padding:15px}
 .suggestions{grid-template-columns:1fr}
 .chat{min-height:calc(100vh - 100px)}
 }
+
+/* ATHENA improvements */
+.lesson {
+    background:#292929;
+    border:1px solid #414141;
+    border-radius:12px;
+    padding:15px;
+    margin:12px 0;
+}
+.lesson summary {
+    cursor:pointer;
+    font-weight:650;
+}
+.lesson p {color:#ccc}
+.lesson pre {margin-bottom:0}
+.action-link {
+    display:inline-block;
+    color:#b9a0ff;
+    margin:5px 10px 5px 0;
+    overflow-wrap:anywhere;
+}
+.update {
+    border-left:3px solid #888;
+    padding:8px 14px;
+    margin:14px 0;
+    background:#292929;
+}
+
+
+.header-actions{display:flex;align-items:center;gap:14px}
+.header-contact{
+background:#343434;color:#fff;border:1px solid #555;
+border-radius:9px;padding:8px 13px;cursor:pointer;
+font:inherit
+}
+.header-contact:hover{background:#484848}
+@media(max-width:650px){
+.header-actions small{display:none}
+.header-contact{padding:7px 10px}
+}
 </style>
 </head>
 <body>
@@ -86,10 +126,19 @@ header{padding:14px}.view{padding:15px}
 <button class="nav" data-view="learn">⌘ Learn coding</button>
 <button class="nav" data-view="terminal">›_ Practice terminal</button>
 <button class="nav" data-view="about">ⓘ My journey</button>
+<button class="nav" data-view="updates">↻ Updates</button>
+<button class="nav" data-view="contact">✉ Contact & Support</button>
+
 <div class="side-note">Built by Adams Kwaku Tawiah.<br>Learning today. Building tomorrow.</div>
 </aside>
 <div class="main">
-<header><strong><span class="mobile-brand">◉ ATHENA · </span><span id="heading">AI Assistant</span></strong><small>Programming companion</small></header>
+<header>
+<strong><span class="mobile-brand">◉ ATHENA · </span><span id="heading">AI Assistant</span></strong>
+<div class="header-actions">
+<small>Programming companion</small>
+<button class="header-contact" type="button" onclick="openView('contact')">✉ Contact</button>
+</div>
+</header>
 <section class="view active" id="chat">
 <div class="chat">
 <div class="welcome" id="welcome">
@@ -100,6 +149,9 @@ header{padding:14px}.view{padding:15px}
 <button class="suggestion" data-prompt="Help me build a website with HTML, CSS and JavaScript."><b>⌘ Build a website</b><span>Turn an idea into a webpage</span></button>
 <button class="suggestion" data-prompt="Explain basic Termux commands."><b>›_ Explore Termux</b><span>Understand your command line</span></button>
 <button class="suggestion" data-prompt="Teach me defensive cybersecurity basics."><b>◇ Cybersecurity</b><span>Learn to protect systems</span></button>
+<button class="suggestion" data-prompt="Explain what HTML is and show me a simple example."><b>🌐 Try ATHENA</b><span>Ask a web development question</span></button>
+<button class="suggestion" data-prompt="Teach me how Python variables work with a beginner example."><b>🐍 Test the AI tutor</b><span>Try a Python lesson</span></button>
+
 </div>
 </div>
 <div class="messages" id="messages"></div>
@@ -110,17 +162,54 @@ header{padding:14px}.view{padding:15px}
 <div class="disclaimer">ATHENA can make mistakes. Verify important information.</div>
 </div>
 </section>
-<section class="view" id="learn"><div class="content">
-<h1>Learn by building.</h1><p class="muted">Small lessons. Practical examples.</p>
-<div class="card"><h2>Python basics</h2><p>Variables store values.</p><pre>name = "Adams"
-print("Hello", name)</pre></div>
-<div class="card"><h2>Web development</h2><p>HTML structures a page, CSS styles it, and JavaScript adds interaction.</p></div>
-<div class="card"><h2>Defensive cybersecurity</h2><p>Start with Linux, networking, account security and protecting your own systems.</p></div>
-</div></section>
+<section class="view" id="learn">
+<div class="content">
+<h1>Learn by building.</h1>
+<p class="muted">Small lessons. Practical examples. Open a lesson to explore it.</p>
+
+<details class="lesson">
+<summary>🐍 Python basics</summary>
+<p>Variables store information that a program can use.</p>
+<pre>name = "Adams"
+age = 15
+print("Hello", name)</pre>
+<p>The variable <b>name</b> stores text. The variable <b>age</b> stores a number.</p>
+</details>
+
+<details class="lesson">
+<summary>🌐 Web development</summary>
+<p>HTML creates the structure of a webpage.</p>
+<pre>&lt;h1&gt;My first website&lt;/h1&gt;
+&lt;p&gt;I am learning to code.&lt;/p&gt;</pre>
+<p>CSS controls appearance, while JavaScript adds behaviour and interaction.</p>
+</details>
+
+<details class="lesson">
+<summary>🔐 Defensive cybersecurity</summary>
+<p>Cybersecurity involves protecting devices, accounts, networks and information.</p>
+<ul>
+<li>Learn Linux fundamentals.</li>
+<li>Understand basic networking.</li>
+<li>Use strong, unique passwords.</li>
+<li>Practise security concepts in authorised learning environments.</li>
+</ul>
+</details>
+
+<details class="lesson">
+<summary>⌨️ Basic terminal commands</summary>
+<p>These commands help you navigate a command-line environment.</p>
+<pre>pwd
+ls
+whoami
+python --version</pre>
+<p>Try the Practice Terminal section to explore simulated commands.</p>
+</details>
+</div>
+</section>
 <section class="view" id="terminal"><div class="content">
 <h1>Practice terminal</h1><p class="muted">A learning simulator, not your real phone shell.</p>
 <div class="terminal"><div class="terminal-title">ATHENA · PRACTICE SHELL</div>
-<div id="output">Welcome, Adams.\nType help to see available commands.\n$</div>
+<div id="output">Welcome to ATHENA Practice Shell.\nType help to see available commands.\n$</div>
 <form id="termform"><span>$</span><input id="cmd" placeholder="Type a command..." autocomplete="off"><button>Run</button></form>
 </div></div></section>
 <section class="view" id="about"><div class="content">
@@ -134,13 +223,51 @@ print("Hello", name)</pre></div>
 <p><b>If you believe in helping young people turn their dreams into skills, please support my journey.</b></p>
 <p>This is not the end of my story. It's only the beginning.</p>
 </div></div></section>
+
+<section class="view" id="updates">
+<div class="content">
+<h1>ATHENA update history</h1>
+<p class="muted">A record of improvements maintained by the creator.</p>
+<div class="update">
+<b>30 October 2026 — Website improvement</b>
+<p>Interactive lessons, expanded practice terminal, contact links and support information.</p>
+</div>
+<div class="update">
+<b>Earlier development</b>
+<p>ATHENA AI assistant and programming learning interface created by Adams Kwaku Tawiah.</p>
+</div>
+</div>
+</section>
+
+<section class="view" id="contact">
+<div class="content">
+<h1>Contact ATHENA</h1>
+<p>Questions, suggestions or bug reports are welcome.</p>
+<div class="card">
+<h2>Contact emails</h2>
+<p><a class="action-link" href="mailto:adamstawiah29@gmail.com">adamstawiah29@gmail.com</a></p>
+<p><a class="action-link" href="mailto:tawiahadams53@gmail.com">tawiahadams53@gmail.com</a></p>
+</div>
+<div class="card">
+<h2>Send feedback</h2>
+<p><a class="action-link" href="mailto:adamstawiah29@gmail.com?subject=ATHENA%20Feedback">Send feedback by email</a></p>
+<p><a class="action-link" href="mailto:tawiahadams53@gmail.com?subject=ATHENA%20Bug%20Report">Report a problem</a></p>
+</div>
+<div class="card">
+<h2>Support the project</h2>
+<p>Want to support the development of ATHENA? Contact its creator to discuss ways to help.</p>
+<a class="action-link" href="mailto:tawiahadams53@gmail.com?subject=Supporting%20ATHENA">Ask how to support ATHENA</a>
+</div>
+</div>
+</section>
+
 <footer>ATHENA · An independent learning project by Adams Kwaku Tawiah.</footer>
 </div></div>
 <script>
 const views=document.querySelectorAll(".view");
 const navs=document.querySelectorAll(".nav");
 const heading=document.getElementById("heading");
-const titles={chat:"AI Assistant",learn:"Learn coding",terminal:"Practice terminal",about:"My journey"};
+const titles={chat:"AI Assistant",learn:"Learn coding",terminal:"Practice terminal",about:"My journey",updates:"Update history",contact:"Contact & Support"};
 function openView(id){
 views.forEach(v=>v.classList.toggle("active",v.id===id));
 navs.forEach(n=>n.classList.toggle("active",n.dataset.view===id));
@@ -211,12 +338,36 @@ document.getElementById("chatform").onsubmit=e=>{e.preventDefault();send()};
 document.querySelectorAll("[data-prompt]").forEach(b=>b.onclick=()=>send(b.dataset.prompt));
 question.oninput=()=>{question.style.height="auto";question.style.height=Math.min(question.scrollHeight,150)+"px"};
 const output=document.getElementById("output");
-const commands={help:"Commands: help, pwd, ls, whoami, python, clear, echo hello",pwd:"/home/adams/practice",ls:"hello.py  index.html  projects/",whoami:"adams",python:'Example:\nname = "Adams"\nprint("Hello", name)\n\nOutput:\nHello, Adams',"python --version":"Python 3 (simulated)","echo hello":"hello"};
+
+const commands={
+help:"Available commands:\nhelp, pwd, ls, whoami, date, about, skills, projects, python, python --version, echo hello, clear",
+pwd:"/home/adams/practice",
+ls:"hello.py  index.html  projects/",
+whoami:"adams",
+date:"ATHENA practice environment",
+about:"ATHENA is a programming learning project created by Adams Kwaku Tawiah.",
+skills:"Python, HTML, CSS, JavaScript, Linux and defensive cybersecurity.",
+projects:"hello.py\nindex.html\nprojects/",
+python:'Example:\nname = "Adams"\nprint("Hello", name)\n\nOutput:\nHello, Adams',
+"python --version":"Python 3 (simulated)",
+"echo hello":"hello"
+};
+
 document.getElementById("termform").onsubmit=e=>{
-e.preventDefault();const c=document.getElementById("cmd").value.trim();if(!c)return;
-if(c==="clear")output.textContent="$";
-else output.textContent+="\n$ "+c+"\n"+(commands[c]||"Command unavailable in this simulator. Type help.");
-output.scrollTop=output.scrollHeight;document.getElementById("cmd").value="";
+e.preventDefault();
+const input=document.getElementById("cmd");
+const c=input.value.trim();
+if(!c)return;
+
+if(c==="clear"){
+output.textContent="ATHENA Practice Shell\n$";
+}else{
+const result=commands[c]||"Command unavailable in this simulator. Type help.";
+output.textContent+="\n$ "+c+"\n"+result;
+}
+
+output.scrollTop=output.scrollHeight;
+input.value="";
 };
 </script>
 </body>
