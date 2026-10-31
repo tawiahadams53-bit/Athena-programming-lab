@@ -933,6 +933,77 @@ header {
   }
 }
 
+
+
+/* ATHENA CHATGPT-STYLE LAYOUT — VISUAL ONLY */
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+  box-sizing: border-box;
+}
+
+#messages .message {
+  display: block;
+  box-sizing: border-box;
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+  animation: athenaMessageIn .2s ease-out;
+}
+
+#messages .message.user {
+  align-self: flex-end;
+  width: fit-content;
+  max-width: min(82%, 650px);
+  padding: 11px 17px;
+  color: #fff;
+  background: #39265c;
+  border: 1px solid rgba(167,139,250,.2);
+  border-radius: 20px 20px 5px 20px;
+  box-shadow: none;
+}
+
+#messages .message.bot,
+#messages .message.assistant {
+  align-self: flex-start;
+  width: 100%;
+  max-width: 780px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: left;
+}
+
+@keyframes athenaMessageIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 650px) {
+  #messages {
+    padding: 18px 12px 32px;
+    gap: 22px;
+  }
+
+  #messages .message {
+    font-size: 14px;
+  }
+
+  #messages .message.user {
+    max-width: 88%;
+  }
+}
+
+/* END ATHENA CHATGPT-STYLE LAYOUT */
+
 </style>
 </head>
 <body>
