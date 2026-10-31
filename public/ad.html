@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Adams Tawiah — Code • Design • AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ ATHENA-MATCHED PALETTE ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg:        #0b0b10;   /* ATHENA dark base */
+    --bg-soft:   #0a0a0f;
+    --card:      #12121a;   /* slightly lifted card */
+    --border:    #232333;   /* subtle purple-grey border */
+    --purple:    #8b5cf6;   /* ATHENA violet */
+    --violet:    #a855f7;   /* ATHENA bright purple */
+    --indigo:    #6366f1;   /* ATHENA accent blue */
+    --text:      #e5e7eb;
+    --muted:     #94a3b8;
+    --gradient:  linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Soft floating orbs — ATHENA purple/indigo */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.18;
+    z-index: -1;
+    pointer-events: none;
+  }
+  body::before {
+    background: var(--violet);
+    top: -160px; left: -160px;
+    animation: float1 15s ease-in-out infinite;
+  }
+  body::after {
+    background: var(--indigo);
+    bottom: -160px; right: -160px;
+    animation: float2 17s ease-in-out infinite;
+  }
+  @keyframes float1 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(80px, 60px); }
+  }
+  @keyframes float2 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(-80px, -60px); }
+  }
+
+  a { text-decoration: none; color: inherit; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 22px; }
+
+  /* ============ NAVBAR ============ */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11, 11, 16, 0.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    height: 68px;
+  }
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.4rem; font-weight: 700;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .nav-links { display: flex; gap: 26px; list-style: none; }
+  .nav-links a {
+    font-weight: 500; color: var(--muted);
+    transition: color .2s; font-size: 0.95rem;
+  }
+  .nav-links a:hover { color: var(--violet); }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: transform .2s, box-shadow .3s, background .3s;
+  }
+  .btn-primary {
+    background: var(--gradient);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.32);
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 32px rgba(139, 92, 246, 0.6);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--purple);
+  }
+  .btn-outline:hover {
+    background: rgba(139, 92, 246, 0.12);
+    transform: translateY(-3px);
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: calc(100vh - 68px);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    padding: 60px 20px;
+    position: relative;
+  }
+  .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(139, 92, 246, 0.10);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: var(--violet);
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(139,92,246,0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(139,92,246,0); }
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 22px;
+    max-width: 850px;
+  }
+  .hero h1 .grad {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .typing {
+    color: var(--violet);
+    border-right: 3px solid var(--violet);
+    padding-right: 4px;
+    animation: blink 0.9s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { border-color: transparent; }
+    50% { border-color: var(--violet); }
+  }
+
+  .hero p {
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 36px;
+  }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+
+  /* ============ SECTION TITLES ============ */
+  section { padding: 90px 0; position: relative; }
+  .section-title { text-align: center; margin-bottom: 55px; }
+  .section-title h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    margin-bottom: 10px;
+  }
+  .section-title h2 span {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-title p { color: var(--muted); }
+
+  /* ============ ABOUT ============ */
+  .about-box {
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 42px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(99,102,241,0.08));
+    pointer-events: none;
+  }
+  .about-box p { font-size: 1.08rem; color: #cbd5e1; position: relative; z-index: 1; }
+  .about-box .emoji { font-size: 1.3rem; }
+
+  /* ============ SERVICES ============ */
+  .grid {
+    display: grid;
+    gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+  }
+  .card::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 16px;
+    padding: 1px;
+    background: var(--gradient);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(139, 92, 246, 0.18);
+  }
+  .card:hover::after { opacity: 1; }
+
+  .card .num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    color: var(--indigo);
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .card .icon { font-size: 2rem; margin-bottom: 12px; }
+  .card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+
+  /* ============ CONTACT ============ */
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .contact-info h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.9rem;
+    margin-bottom: 14px;
+  }
+  .contact-info h2 span {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .contact-info p { color: var(--muted); margin-bottom: 26px; }
+
+  .contact-item {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+    cursor: pointer;
+  }
+  .contact-item:hover {
+    transform: translateX(6px);
+    border-color: var(--violet);
+    box-shadow: 0 0 22px rgba(139,92,246,0.25);
+  }
+  .contact-item .ci-icon {
+    font-size: 1.4rem;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 10px;
+    background: rgba(139, 92, 246, 0.12);
+    flex-shrink: 0;
+  }
+  .contact-item .ci-label { font-size: 0.78rem; color: var(--muted); }
+  .contact-item .ci-value { font-weight: 600; color: var(--text); }
+
+  /* Feedback form */
+  form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px 26px;
+    display: flex; flex-direction: column; gap: 16px;
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.08);
+  }
+  form h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+  }
+  form h3 span {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  input, textarea {
+    width: 100%;
+    padding: 13px 16px;
+    background: #08080d;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  input:focus, textarea:focus {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+  }
+  textarea { resize: vertical; min-height: 110px; }
+  .error { color: #f87171; font-size: 0.82rem; display: none; }
+  .success {
+    display: none;
+    text-align: center;
+    color: #4ade80;
+    font-weight: 600;
+    margin-top: 6px;
+    font-size: 0.9rem;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 34px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  footer .heart { color: var(--violet); }
+
+  /* ============ SCROLL REVEAL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ CURSOR GLOW ============ */
+  .cursor-glow {
+    position: fixed;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,92,246,0.18), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity .3s;
+  }
+  @media (hover: none) { .cursor-glow { display: none; } }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 820px) {
+    .contact-wrap { grid-template-columns: 1fr; gap: 30px; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero { padding: 40px 16px 70px; min-height: auto; }
+    section { padding: 65px 0; }
+    .hero-btns .btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ============ NAVBAR ============ -->
+<header>
+  <nav class="container">
+    <div class="logo">Adams.dev</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <!-- Link back to ATHENA -->
+      <li>
+        <a href="https://athena-programming-lab.tawiahadams53.workers.dev/"
+           target="_blank" rel="noopener"
+           style="color: var(--violet); font-weight: 600;">
+          ← ATHENA
+        </a>
+      </li>
+    </ul>
+    <a href="#contact" class="btn btn-primary">Hire Me</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container">
+    <div class="badge">✨ Software Beginner • Still Learning • Growing Fast</div>
+    <h1>
+      Turning ideas into <span class="grad">powerful</span><br />
+      <span class="typing" id="typing"></span>
+    </h1>
+    <p>
+      Hi, I'm <strong>Adams Tawiah</strong> — a passionate beginner developer
+      building websites, AI-powered tools, and clean code that actually works.
+      Dream big. Start small. Ship fast. 🚀
+    </p>
+    <div class="hero-btns">
+      <a href="#services" class="btn btn-primary">See What I Do</a>
+      <a href="https://athena-programming-lab.tawiahadams53.workers.dev/"
+         target="_blank" rel="noopener" class="btn btn-outline">
+        🤖 Visit ATHENA
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="container">
+    <div class="section-title reveal">
+      <h2>About <span>Me</span></h2>
+      <p>A little bit about who I am</p>
+    </div>
+    <div class="about-box reveal">
+      <p>
+        <span class="emoji">👋</span><br /><br />
+        Hi, I'm <strong>Adams Tawiah</strong>, a software beginner 🔰 who's still
+        learning ✨ I'm looking forward to seeing your feedback on my website. Bye 👋
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services">
+  <div class="container">
+    <div class="section-title reveal">
+      <h2>I <span>Specialise</span> In</h2>
+      <p>Skills I'm building and offering</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal">
+        <div class="num">01</div>
+        <div class="icon">💻</div>
+        <h3>Programming Websites</h3>
+        <p>Clean, modern, responsive websites built from scratch with love.</p>
+      </div>
+      <div class="card reveal">
+        <div class="num">02</div>
+        <div class="icon">🤖</div>
+        <h3>AI Integration</h3>
+        <p>Bringing smart AI features into web apps and tools.</p>
+      </div>
+      <div class="card reveal">
+        <div class="num">03</div>
+        <div class="icon">🧱</div>
+        <h3>HTML Structures</h3>
+        <p>Well-organized, semantic HTML that's easy to read and scale.</p>
+      </div>
+      <div class="card reveal">
+        <div class="num">04</div>
+        <div class="icon">🛒</div>
+        <h3>Selling Code</h3>
+        <p>Ready-made HTML, CSS &amp; JavaScript templates you can buy and use.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-title reveal">
+      <h2>Get In <span>Touch</span></h2>
+      <p>Your feedback means the world to me 💜</p>
+    </div>
+
+    <div class="contact-wrap">
+      <div class="contact-info reveal">
+        <h2>Let's <span>talk</span>.</h2>
+        <p>Reach out anytime — I'll reply as fast as I can.</p>
+
+        <a href="tel:+233549830320" class="contact-item">
+          <div class="ci-icon">📞</div>
+          <div>
+            <div class="ci-label">Call me</div>
+            <div class="ci-value">+233 549 830 320</div>
+          </div>
+        </a>
+
+        <a href="https://wa.me/233549830320" target="_blank" rel="noopener" class="contact-item">
+          <div class="ci-icon">💬</div>
+          <div>
+            <div class="ci-label">WhatsApp</div>
+            <div class="ci-value">+233 549 830 320</div>
+          </div>
+        </a>
+
+        <a href="sms:+233549830320" class="contact-item">
+          <div class="ci-icon">✉️</div>
+          <div>
+            <div class="ci-label">Text me</div>
+            <div class="ci-value">Send an SMS anytime</div>
+          </div>
+        </a>
+      </div>
+
+      <form id="feedbackForm" class="reveal" novalidate>
+        <h3>Send <span>Feedback</span></h3>
+
+        <div>
+          <input type="text" id="name" placeholder="Your name" />
+          <span class="error" id="nameError">Please enter your name.</span>
+        </div>
+
+        <div>
+          <input type="email" id="email" placeholder="Your email" />
+          <span class="error" id="emailError">Please enter a valid email.</span>
+        </div>
+
+        <div>
+          <textarea id="message" placeholder="What do you think of my website?"></textarea>
+          <span class="error" id="messageError">Please write a short message.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send Feedback 💌</button>
+        <p class="success" id="success">
+          ✅ Thanks! Opening your mail app to send feedback to Adams...
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    © 2026 <strong>Adams Tawiah</strong> • Built with <span class="heart">♥</span> and lots of learning.
+    <br /><br />
+    <a href="https://athena-programming-lab.tawiahadams53.workers.dev/"
+       target="_blank" rel="noopener"
+       style="color: var(--violet); font-weight: 600;">
+      🤖 Explore ATHENA — my AI learning companion
+    </a>
+  </div>
+</footer>
+
+<!-- ============ JS ============ -->
+<script>
+  /* ---------- Typing effect ---------- */
+  const words = ["websites.", "AI tools.", "clean code.", "big dreams."];
+  const typingEl = document.getElementById('typing');
+  let wi = 0, ci = 0, deleting = false;
+
+  function typeLoop() {
+    const current = words[wi];
+    if (!deleting) {
+      typingEl.textContent = current.slice(0, ci++);
+      if (ci > current.length) {
+        deleting = true;
+        setTimeout(typeLoop, 1400);
+        return;
+      }
+    } else {
+      typingEl.textContent = current.slice(0, ci--);
+      if (ci < 0) {
+        deleting = false;
+        wi = (wi + 1) % words.length;
+        ci = 0;
+      }
+    }
+    setTimeout(typeLoop, deleting ? 45 : 90);
+  }
+  typeLoop();
+
+  /* ---------- Scroll reveal ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('active');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  /* ---------- Cursor glow ---------- */
+  const glow = document.getElementById('cursorGlow');
+  document.addEventListener('mousemove', (e) => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+
+  /* ---------- Feedback form ---------- */
+  const form = document.getElementById('feedbackForm');
+  const success = document.getElementById('success');
+  const YOUR_EMAIL = 'adams.tawiah' + '@' + 'example.com'; // ← put your real email here!
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const message = document.getElementById('message');
+    let valid = true;
+
+    document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+
+    if (name.value.trim() === '') {
+      document.getElementById('nameError').style.display = 'block';
+      valid = false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value.trim())) {
+      document.getElementById('emailError').style.display = 'block';
+      valid = false;
+    }
+    if (message.value.trim() === '') {
+      document.getElementById('messageError').style.display = 'block';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const subject = encodeURIComponent(`Website Feedback from ${name.value}`);
+    const body = encodeURIComponent(
+      `Name: ${name.value}\nEmail: ${email.value}\n\nMessage:\n${message.value}`
+    );
+    window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
+
+    success.style.display = 'block';
+    form.reset();
+    setTimeout(() => { success.style.display = 'none'; }, 6000);
+  });
+</script>
+</body>
+</html>
