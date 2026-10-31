@@ -227,6 +227,50 @@ body {
     color: white;
 }
 
+
+.conversation-manager {
+    margin-top: 22px;
+    padding: 0 10px;
+    min-height: 0;
+}
+
+.conversation-heading {
+    color: #858585;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+}
+
+
+.conversation-item {
+    display: block;
+    width: 100%;
+    padding: 9px 10px;
+    margin: 4px 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #c9c4d8;
+    text-align: left;
+    font-size: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.conversation-item:hover {
+    background: #29213d;
+    color: #ffffff;
+}
+
+.conversation-empty {
+    color: #777;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
 .side-note {
     line-height: 1.8;
     color: #858585;
@@ -1092,6 +1136,13 @@ header {
 <button class="nav" data-view="about">ⓘ My journey</button>
 <button class="nav" data-view="updates">↻ Updates</button>
 <button class="nav" data-view="contact">✉ Contact & Support</button>
+<div class="conversation-manager">
+    <div class="conversation-heading">RECENT CONVERSATIONS</div>
+    <div id="conversationList">
+        <p class="conversation-empty">No saved conversations yet.</p>
+    </div>
+</div>
+
 
 <div class="side-note">Built by Adams Kwaku Tawiah.<br>Learning today. Building tomorrow.</div>
 </aside>
@@ -1245,7 +1296,15 @@ views.forEach(v=>v.classList.toggle("active",v.id===id));
 navs.forEach(n=>n.classList.toggle("active",n.dataset.view===id));
 heading.textContent=titles[id];
 }
-navs.forEach(n=>n.onclick=()=>openView(n.dataset.view));
+navs.forEach(n => {
+    n.onclick = () => {
+        if (n.dataset.view === "chat") {
+            athenaStartNewChat();
+        } else {
+            openView(n.dataset.view);
+        }
+    };
+});
 const messages=document.getElementById("messages");
 const welcome=document.getElementById("welcome");
 const question=document.getElementById("question");
@@ -1599,6 +1658,8 @@ async function send(text) {
 
         waiting.innerHTML = athenaFormatMarkdown(data.reply);
         chatHistory.push({role: "assistant", content: data.reply});
+        athenaUpdateCurrentConversation();
+        athenaRenderConversationList();
 
         if (imageToSend && selectedImageData === imageToSend) {
             clearAttachment();
@@ -1887,6 +1948,162 @@ input.value="";
         if (event.key === "Escape" && voiceActive) closeVoice();
     });
 })();
+
+/* ATHENA CONVERSATION STORAGE */
+const ATHENA_STORAGE_KEY = "athena_saved_conversations_v1";
+
+function athenaLoadConversations() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(ATHENA_STORAGE_KEY) || "[]"
+        );
+        return Array.isArray(saved) ? saved : [];
+    } catch (error) {
+        console.warn("Could not load saved conversations:", error);
+        return [];
+    }
+}
+
+function athenaSaveConversations(conversations) {
+    try {
+        localStorage.setItem(
+            ATHENA_STORAGE_KEY,
+            JSON.stringify(conversations)
+        );
+        return true;
+    } catch (error) {
+        console.warn("Could not save conversations:", error);
+        return false;
+    }
+}
+
+let athenaConversations = athenaLoadConversations();
+let athenaCurrentConversationId = null;
+
+function athenaCreateConversation(firstMessage = "New conversation") {
+    const conversation = {
+        id: Date.now().toString() + Math.random().toString(36).slice(2, 8),
+        title: firstMessage.replace(/\s+/g, " ").trim().slice(0, 42) || "New conversation",
+        messages: [],
+        updatedAt: Date.now()
+    };
+
+    athenaConversations.unshift(conversation);
+    athenaCurrentConversationId = conversation.id;
+    athenaSaveConversations(athenaConversations);
+    return conversation;
+}
+
+function athenaUpdateCurrentConversation() {
+    if (!athenaCurrentConversationId) {
+        const firstUserMessage = chatHistory.find(message => message.role === "user");
+        if (!firstUserMessage) return;
+
+        athenaCreateConversation(firstUserMessage.content);
+    }
+
+    const conversation = athenaConversations.find(
+        item => item.id === athenaCurrentConversationId
+    );
+
+    if (!conversation) return;
+
+    conversation.messages = chatHistory.map(message => ({
+        role: message.role,
+        content: message.content
+    }));
+
+    conversation.updatedAt = Date.now();
+
+    athenaConversations.sort((a, b) => b.updatedAt - a.updatedAt);
+    athenaSaveConversations(athenaConversations);
+}
+
+function athenaRenderConversationList() {
+    const list = document.getElementById("conversationList");
+    if (!list) return;
+
+    list.textContent = "";
+
+    if (athenaConversations.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "conversation-empty";
+        empty.textContent = "No saved conversations yet.";
+        list.appendChild(empty);
+        return;
+    }
+
+    athenaConversations.forEach(conversation => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "conversation-item";
+        item.textContent = conversation.title || "New conversation";
+        item.title = conversation.title || "New conversation";
+
+        item.addEventListener("click", () => {
+            athenaOpenConversation(conversation.id);
+        });
+
+        list.appendChild(item);
+    });
+}
+
+function athenaOpenConversation(id) {
+    const conversation = athenaConversations.find(item => item.id === id);
+    if (!conversation) return;
+
+    athenaCurrentConversationId = conversation.id;
+
+    chatHistory.length = 0;
+    conversation.messages.forEach(message => {
+        chatHistory.push({
+            role: message.role,
+            content: message.content
+        });
+    });
+
+    messages.textContent = "";
+
+    conversation.messages.forEach(message => {
+        const element = document.createElement("div");
+        element.className = "message " + message.role;
+
+        if (message.role === "assistant") {
+            element.innerHTML = athenaFormatMarkdown(message.content);
+        } else {
+            element.textContent = message.content;
+        }
+
+        messages.appendChild(element);
+    });
+
+    welcome.style.display = conversation.messages.length ? "none" : "";
+    openView("chat");
+    athenaRenderConversationList();
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function athenaStartNewChat() {
+    athenaCurrentConversationId = null;
+    chatHistory.length = 0;
+    messages.textContent = "";
+    question.value = "";
+    question.style.height = "auto";
+    clearAttachment();
+    welcome.style.display = "";
+    openView("chat");
+}
+
+/* Existing initialization */
+function athenaInitializeConversationManager() {
+    athenaConversations = athenaLoadConversations();
+    athenaRenderConversationList();
+}
+
+athenaInitializeConversationManager();
+
+/* END ATHENA CONVERSATION STORAGE */
+
 </script>
 
 </body>
