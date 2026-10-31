@@ -1050,6 +1050,36 @@ header {
     white-space: pre;
 }
 
+
+/* ATHENA RESPONSIVE MARKDOWN TABLES */
+.athena-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin: 14px 0 20px;
+    border: 1px solid #49356c;
+    border-radius: 10px;
+}
+.athena-table-wrap table {
+    width: 100%;
+    min-width: 420px;
+    border-collapse: collapse;
+    text-align: left;
+}
+.athena-table-wrap th {
+    background: #251a3a;
+    color: #d7c1ff;
+    font-weight: 700;
+}
+.athena-table-wrap th,
+.athena-table-wrap td {
+    padding: 11px 13px;
+    border-bottom: 1px solid #49356c;
+    vertical-align: top;
+}
+.athena-table-wrap tr:last-child td {
+    border-bottom: none;
+}
+
 </style>
 </head>
 <body>
@@ -1258,22 +1288,77 @@ function athenaFormatMarkdown(raw) {
         return safe;
     }
 
-    for (const line of lines) {
+    function cells(line) {
+        return line.trim().replace(/^\|/, "").replace(/\|$/, "")
+            .split("|").map(cell => cell.trim());
+    }
+
+    function isTableSeparator(line) {
+        const parts = cells(line);
+        return parts.length > 0 &&
+            parts.every(part => /^:?-{3,}:?$/.test(part));
+    }
+
+    let i = 0;
+
+    while (i < lines.length) {
+        const line = lines[i];
+
         if (line.trim().startsWith("```")) {
             flushParagraph();
             closeList();
+
             if (inCode) {
-                html += "<pre><code>" + athenaEscapeHTML(code.join("\n")) + "</code></pre>";
+                html += "<pre><code>" +
+                    athenaEscapeHTML(code.join("\n")) +
+                    "</code></pre>";
                 code = [];
                 inCode = false;
             } else {
                 inCode = true;
             }
+            i++;
             continue;
         }
 
         if (inCode) {
             code.push(line);
+            i++;
+            continue;
+        }
+
+        // Markdown table detection
+        if (
+            line.includes("|") &&
+            i + 1 < lines.length &&
+            lines[i + 1].includes("|") &&
+            isTableSeparator(lines[i + 1])
+        ) {
+            flushParagraph();
+            closeList();
+
+            const headers = cells(line);
+            i += 2;
+
+            html += '<div class="athena-table-wrap"><table><thead><tr>';
+            headers.forEach(cell => {
+                html += "<th>" + athenaInline(cell) + "</th>";
+            });
+            html += "</tr></thead><tbody>";
+
+            while (i < lines.length && lines[i].includes("|") && lines[i].trim()) {
+                const row = cells(lines[i]);
+                html += "<tr>";
+
+                headers.forEach((_, index) => {
+                    html += "<td>" + athenaInline(row[index] || "") + "</td>";
+                });
+
+                html += "</tr>";
+                i++;
+            }
+
+            html += "</tbody></table></div>";
             continue;
         }
 
@@ -1289,11 +1374,13 @@ function athenaFormatMarkdown(raw) {
         } else if (bullet || numbered) {
             flushParagraph();
             const type = bullet ? "ul" : "ol";
+
             if (list !== type) {
                 closeList();
                 list = type;
                 html += `<${list}>`;
             }
+
             html += "<li>" + athenaInline((bullet || numbered)[1]) + "</li>";
         } else if (!line.trim()) {
             flushParagraph();
@@ -1302,16 +1389,22 @@ function athenaFormatMarkdown(raw) {
             closeList();
             paragraph.push(line);
         }
+
+        i++;
     }
 
     if (inCode) {
-        html += "<pre><code>" + athenaEscapeHTML(code.join("\n")) + "</code></pre>";
+        html += "<pre><code>" +
+            athenaEscapeHTML(code.join("\n")) +
+            "</code></pre>";
     }
 
     flushParagraph();
     closeList();
+
     return html;
 }
+
 /* END ATHENA SAFE MARKDOWN DISPLAY */
 
 function addMessage(text,role){
