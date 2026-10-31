@@ -822,6 +822,117 @@ footer {
     cursor: pointer;
 }
 
+
+/* Modern Contact button */
+.header-contact {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+  color: #fff !important;
+  border: 1px solid #a78bfa !important;
+  border-radius: 12px !important;
+  padding: 9px 15px !important;
+  font-weight: 650 !important;
+  box-shadow: 0 0 14px rgba(124, 58, 237, .25);
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.header-contact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(139, 92, 246, .5);
+}
+
+
+/* NOVA PURPLE VISUAL UPGRADE */
+:root {
+  --purple: #8b5cf6;
+  --violet: #a78bfa;
+  --purple-glow: rgba(139, 92, 246, .28);
+}
+
+body {
+  background: #100b20;
+}
+
+header {
+  background: rgba(20, 13, 39, .94);
+  border-bottom: 1px solid rgba(167, 139, 250, .16);
+  backdrop-filter: blur(14px);
+}
+
+.header-contact,
+.send {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 5px 20px var(--purple-glow);
+  transition: .25s ease;
+}
+
+.header-contact:hover,
+.send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(139,92,246,.4);
+}
+
+.suggestion {
+  border-radius: 16px;
+  border: 1px solid rgba(167,139,250,.2);
+  background: #1b1430;
+  transition: transform .25s ease, background .25s ease, border-color .25s ease;
+}
+
+.suggestion:hover {
+  transform: translateY(-3px);
+  background: #281b45;
+  border-color: #8b5cf6;
+}
+
+.message.user {
+  background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px 20px 5px 20px;
+  box-shadow: 0 5px 18px rgba(109,40,217,.2);
+}
+
+.composer {
+  border: 1px solid rgba(167,139,250,.25);
+  border-radius: 20px;
+  transition: box-shadow .25s ease, border-color .25s ease;
+}
+
+.composer:focus-within {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(139,92,246,.13),
+              0 0 24px var(--purple-glow);
+}
+
+@media (max-width: 650px) {
+  header {
+    padding: 12px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .header-contact {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .suggestion {
+    border-radius: 14px;
+  }
+
+  .composer {
+    border-radius: 17px;
+  }
+
+  .message.user {
+    max-width: 88%;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -842,7 +953,7 @@ footer {
 <strong><span class="mobile-brand">◉ ATHENA · </span><span id="heading">AI Assistant</span></strong>
 <div class="header-actions">
 <small>Programming companion</small>
-<button class="header-contact" type="button" onclick="openView('contact')">✉ Contact</button>
+<button class="header-contact" type="button" onclick="window.location.href='./ad.html'">🖋️💫 Contact</button>
 </div>
 </header>
 <section class="view active" id="chat">
